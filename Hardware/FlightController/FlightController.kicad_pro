@@ -352,6 +352,10 @@
     [
       "5b6a636a-b541-40ae-8f3f-abd3c50f92f1",
       "Display"
+    ],
+    [
+      "8a0d5691-062e-42a2-ae62-fa37b063f597",
+      "PowerSupply"
     ]
   ],
   "text_variables": {}

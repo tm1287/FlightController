@@ -37,14 +37,14 @@
     )
   )
 
-  (sheet (at 81.28 124.46) (size 26.67 25.4) (fields_autoplaced)
+  (sheet (at 81.28 134.62) (size 26.67 25.4) (fields_autoplaced)
     (stroke (width 0.1524) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 2d99a768-774b-45ef-af27-8c1dc74e2154)
-    (property "Sheet name" "SensorEEPROM" (id 0) (at 81.28 123.7484 0)
+    (property "Sheet name" "SensorEEPROM" (id 0) (at 81.28 133.9084 0)
       (effects (font (size 1.27 1.27)) (justify left bottom))
     )
-    (property "Sheet file" "SensorEEPROM.kicad_sch" (id 1) (at 81.28 150.4446 0)
+    (property "Sheet file" "SensorEEPROM.kicad_sch" (id 1) (at 81.28 160.6046 0)
       (effects (font (size 1.27 1.27)) (justify left top))
     )
   )
@@ -73,14 +73,14 @@
     )
   )
 
-  (sheet (at 59.69 33.02) (size 34.29 33.02) (fields_autoplaced)
+  (sheet (at 125.73 30.48) (size 35.56 33.02) (fields_autoplaced)
     (stroke (width 0.1524) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 8a0d5691-062e-42a2-ae62-fa37b063f597)
-    (property "Sheet name" "PowerSupply" (id 0) (at 59.69 32.3084 0)
+    (property "Sheet name" "PowerSupply" (id 0) (at 125.73 29.7684 0)
       (effects (font (size 1.27 1.27)) (justify left bottom))
     )
-    (property "Sheet file" "PowerSupply.kicad_sch" (id 1) (at 59.69 66.6246 0)
+    (property "Sheet file" "PowerSupply.kicad_sch" (id 1) (at 125.73 64.0846 0)
       (effects (font (size 1.27 1.27)) (justify left top))
     )
   )
@@ -97,14 +97,14 @@
     )
   )
 
-  (sheet (at 44.45 124.46) (size 25.4 25.4) (fields_autoplaced)
+  (sheet (at 44.45 134.62) (size 25.4 25.4) (fields_autoplaced)
     (stroke (width 0.1524) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid beafb0fa-bc5a-45f7-a671-ae1fea1f5da0)
-    (property "Sheet name" "Sensors" (id 0) (at 44.45 123.7484 0)
+    (property "Sheet name" "Sensors" (id 0) (at 44.45 133.9084 0)
       (effects (font (size 1.27 1.27)) (justify left bottom))
     )
-    (property "Sheet file" "Sensors.kicad_sch" (id 1) (at 44.45 150.4446 0)
+    (property "Sheet file" "Sensors.kicad_sch" (id 1) (at 44.45 160.6046 0)
       (effects (font (size 1.27 1.27)) (justify left top))
     )
   )
@@ -186,6 +186,36 @@
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/1d172848-e206-4c22-8952-b0e1af005fe9"
       (reference "#PWR017") (unit 1) (value "+3.3VA") (footprint "")
     )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/5e42f8a6-d5d0-417f-add5-3c2cbcde8da4"
+      (reference "#PWR018") (unit 1) (value "+3.3V") (footprint "")
+    )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/10753d65-64b0-4eea-bb13-7ab064a80423"
+      (reference "#PWR019") (unit 1) (value "+3.3V") (footprint "")
+    )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/e7fbf42f-4c47-4ed5-be61-c221d43108c3"
+      (reference "#PWR020") (unit 1) (value "+3.3V") (footprint "")
+    )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/7d83d908-d3a4-474b-97bb-e6b0713f696d"
+      (reference "#PWR021") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/643b7a9e-b43c-4525-a889-168b259c28a0"
+      (reference "#PWR022") (unit 1) (value "+3.3V") (footprint "")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/52966bb4-3197-4eca-8645-f5ad76297ed2"
+      (reference "#PWR023") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/61a532e1-447a-4194-ba4f-1963e96282ae"
+      (reference "#PWR024") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/4b6dc1c0-5445-4e53-ae26-80eed81beb4c"
+      (reference "#PWR025") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/050e6b57-8c1f-49ed-87c6-57ef4274e569"
+      (reference "#PWR026") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/ec1e020b-2db3-4803-bb06-d189b615dcea"
+      (reference "#PWR027") (unit 1) (value "+3.3V") (footprint "")
+    )
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/8f660c2e-10ea-4177-ac19-0f38c3f32fe7"
       (reference "#PWR0101") (unit 1) (value "GND") (footprint "")
     )
@@ -218,6 +248,12 @@
     )
     (path "/8a0d5691-062e-42a2-ae62-fa37b063f597/71b6af67-ea4b-4e05-8aa4-786115d82439"
       (reference "#PWR0111") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/26011f71-4e3a-4961-9d66-e0f899aae2bd/3d24cb55-207e-4375-b07f-7dcf98f81a8f"
+      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/26011f71-4e3a-4961-9d66-e0f899aae2bd/6449bfbf-9aa2-4f24-bc37-5fa5f8b6bfab"
+      (reference "#PWR?") (unit 1) (value "+3.3V") (footprint "")
     )
     (path "/8a0d5691-062e-42a2-ae62-fa37b063f597/2a7d6eea-6000-42a2-8256-e0dc52fb8c7c"
       (reference "C1") (unit 1) (value "4.7uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
@@ -270,8 +306,20 @@
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/f7a0e47c-173d-473d-b199-70c2aa3d4ba6"
       (reference "C17") (unit 1) (value "10nF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/57e54a4a-5f4c-46f1-9110-c8e9475fc579"
+      (reference "C18") (unit 1) (value "10nF") (footprint "Capacitor_SMD:C_0603_1608Metric")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/6c35333a-6e6a-4438-9954-212361236691"
+      (reference "C19") (unit 1) (value "0.1uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/e6546842-aa76-4fe7-a80e-dea05b124777"
+      (reference "C20") (unit 1) (value "2.2uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
+    )
     (path "/8a0d5691-062e-42a2-ae62-fa37b063f597/d2ce6b0a-e5d9-44a8-82d9-4f12095b88b0"
       (reference "D1") (unit 1) (value "RED") (footprint "LED_SMD:LED_0603_1608Metric")
+    )
+    (path "/8a0d5691-062e-42a2-ae62-fa37b063f597/e5138f28-e7c9-444d-ab74-597ec6b89d50"
+      (reference "F1") (unit 1) (value "750mA") (footprint "")
     )
     (path "/8a0d5691-062e-42a2-ae62-fa37b063f597/b6d56f24-66ca-48ce-a62a-724b505f5dc3"
       (reference "J1") (unit 1) (value "Conn_01x02") (footprint "")
@@ -284,6 +332,9 @@
     )
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/17a014d5-8d2d-477a-94d3-045576d040b5"
       (reference "J4") (unit 1) (value "Conn_02x03_Odd_Even") (footprint "")
+    )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/33ebcdc3-2236-4647-a389-0c8248cd3c4c"
+      (reference "J5") (unit 1) (value "Conn_01x04") (footprint "")
     )
     (path "/8a0d5691-062e-42a2-ae62-fa37b063f597/88dd039d-dd4f-4b21-a1b3-bba0726cb4ff"
       (reference "L1") (unit 1) (value "8.2 uH") (footprint "")
@@ -310,7 +361,13 @@
       (reference "R6") (unit 1) (value "2.2k") (footprint "Resistor_SMD:R_0603_1608Metric")
     )
     (path "/8a0d5691-062e-42a2-ae62-fa37b063f597/45e09f42-0d40-4748-b8e2-597f1eedf9de"
-      (reference "R7") (unit 1) (value "1.5k") (footprint "Resistor_SMD:R_0603_1608Metric")
+      (reference "R7") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0603_1608Metric")
+    )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/d2029644-74fa-4e9c-87aa-fc5793e7017a"
+      (reference "R8") (unit 1) (value "2.2k") (footprint "Resistor_SMD:R_0603_1608Metric")
+    )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/4f57e901-fc98-437e-b673-0ef6702ed715"
+      (reference "R9") (unit 1) (value "2.2k") (footprint "Resistor_SMD:R_0603_1608Metric")
     )
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/2a646e65-3efb-4e20-8205-2e84f7895314"
       (reference "SW1") (unit 1) (value "SW_SPDT") (footprint "")
@@ -323,6 +380,9 @@
     )
     (path "/8a0d5691-062e-42a2-ae62-fa37b063f597/c487597d-18ab-4e88-a958-7ff6571fde47"
       (reference "U3") (unit 1) (value "LMR54410DBVR") (footprint "Package_TO_SOT_SMD:SOT-23-6")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/787af3ff-5d20-4564-bb94-cafd3ab19d75"
+      (reference "U4") (unit 1) (value "ICM-42670-P") (footprint "Package_LGA:LGA-14_3x2.5mm_P0.5mm_LayoutBorder3x4y")
     )
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/3b5099b2-2cdf-44df-9ac9-85364c6a641f"
       (reference "Y1") (unit 1) (value "16MHz") (footprint "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm")

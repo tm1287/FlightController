@@ -45,16 +45,10 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.0
+          "min_clearance": 0.508
         }
       },
-      "diff_pair_dimensions": [
-        {
-          "gap": 0.0,
-          "via_gap": 0.0,
-          "width": 0.0
-        }
-      ],
+      "diff_pair_dimensions": [],
       "drc_exclusions": [],
       "meta": {
         "version": 2
@@ -104,7 +98,7 @@
         "allow_microvias": false,
         "max_error": 0.005,
         "min_clearance": 0.0,
-        "min_copper_edge_clearance": 0.01,
+        "min_copper_edge_clearance": 0.0,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.25,
         "min_microvia_diameter": 0.19999999999999998,
@@ -118,24 +112,8 @@
         "solder_mask_min_width": 0.0,
         "use_height_for_length_calcs": true
       },
-      "track_widths": [
-        0.0,
-        0.1,
-        0.3,
-        0.4,
-        0.5,
-        1.0
-      ],
-      "via_dimensions": [
-        {
-          "diameter": 0.0,
-          "drill": 0.0
-        },
-        {
-          "diameter": 1.0,
-          "drill": 0.8
-        }
-      ],
+      "track_widths": [],
+      "via_dimensions": [],
       "zones_allow_external_fillets": false,
       "zones_use_no_outline": true
     },
@@ -355,7 +333,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "FlightController.kicad_pro",
+    "filename": "PDB.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -387,7 +365,7 @@
     "last_paths": {
       "gencad": "",
       "idf": "",
-      "netlist": "",
+      "netlist": "../../../../../../../../Program Files/KiCad/6.0/",
       "specctra_dsn": "",
       "step": "",
       "vrml": ""
@@ -434,24 +412,8 @@
   },
   "sheets": [
     [
-      "27c69e26-ab64-4e27-9bab-6987b06e07ba",
+      "51c85ec5-fb47-481e-a4a0-97aa5015a916",
       ""
-    ],
-    [
-      "4354cbd2-e9c4-4e30-9827-d99ebbfc8118",
-      "MCU"
-    ],
-    [
-      "beafb0fa-bc5a-45f7-a671-ae1fea1f5da0",
-      "Sensors"
-    ],
-    [
-      "475d3902-1f1d-456e-bff8-7fcf4e582a90",
-      "Connectors"
-    ],
-    [
-      "d5c809bf-9869-4d69-b78a-5d61587a1e83",
-      "PowerSupply"
     ]
   ],
   "text_variables": {}

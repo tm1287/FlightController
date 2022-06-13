@@ -122,6 +122,18 @@
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/10753d65-64b0-4eea-bb13-7ab064a80423"
       (reference "#PWR019") (unit 1) (value "+3.3V") (footprint "")
     )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/fc094908-466e-4380-9e13-db5eb92878d0"
+      (reference "#PWR020") (unit 1) (value "+3.3V") (footprint "")
+    )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/6f16b23b-8225-4d35-b69f-a1619de46ca8"
+      (reference "#PWR021") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/d827a3ee-2fc9-4764-b7f0-f94bfcc69b45"
+      (reference "#PWR022") (unit 1) (value "GND") (footprint "")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/0d1b0290-1089-4ffb-bac7-087a8902b501"
+      (reference "#PWR023") (unit 1) (value "+3.3V") (footprint "")
+    )
     (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/230d3ccb-6a79-46f2-bcd5-25c251e8e8b9"
       (reference "#PWR028") (unit 1) (value "GND") (footprint "")
     )
@@ -278,6 +290,9 @@
     (path "/d5c809bf-9869-4d69-b78a-5d61587a1e83/73628ea0-8683-41ca-b5d3-9f08cdd60678"
       (reference "C18") (unit 1) (value "22uF") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/857e4b73-32c7-4634-881d-e3f196a515d7"
+      (reference "C19") (unit 1) (value "2.2uF") (footprint "Capacitor_SMD:C_0402_1005Metric")
+    )
     (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/a53b98ae-8c39-4fde-8a5b-782047a383f4"
       (reference "C21") (unit 1) (value "0.1uF") (footprint "Capacitor_SMD:C_0402_1005Metric")
     )
@@ -338,11 +353,20 @@
     (path "/475d3902-1f1d-456e-bff8-7fcf4e582a90/ca50bbe3-82d1-4305-91a9-4178bf1d6c68"
       (reference "J11") (unit 1) (value "Conn_01x04") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
     )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/70c63837-478a-40af-b689-c4f56543a138"
+      (reference "J12") (unit 1) (value "Conn_01x03") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical")
+    )
+    (path "/475d3902-1f1d-456e-bff8-7fcf4e582a90/d508e7ca-afbf-4221-a58d-4762aa30d9c6"
+      (reference "J13") (unit 1) (value "Conn_01x02") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical")
+    )
     (path "/d5c809bf-9869-4d69-b78a-5d61587a1e83/dea4f53e-b974-400b-b2bd-b2cdfc22db16"
       (reference "L1") (unit 1) (value "6.8uH") (footprint "Inductor_SMD:L_0402_1005Metric")
     )
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/93a0c84c-4aef-4687-8c85-dbf37f8eaa28"
       (reference "L2") (unit 1) (value "39nH") (footprint "Inductor_SMD:L_0402_1005Metric")
+    )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/12bcf08d-7d43-4e2d-8941-3dd60b56748d"
+      (reference "Q1") (unit 1) (value "MMBT3904") (footprint "Package_TO_SOT_SMD:SOT-23")
     )
     (path "/d5c809bf-9869-4d69-b78a-5d61587a1e83/c456272b-bae3-47aa-a588-a942830f7942"
       (reference "R1") (unit 1) (value "11.5k") (footprint "Resistor_SMD:R_0402_1005Metric")
@@ -371,6 +395,12 @@
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/843bee58-1cb1-4440-b0ef-37f5dea41f6a"
       (reference "R9") (unit 1) (value "4.7k") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/270c295d-44af-4216-a12b-6e18680278c3"
+      (reference "R10") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0402_1005Metric")
+    )
+    (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/de280cf7-6be8-47a7-859b-4e82a219829d"
+      (reference "R11") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0402_1005Metric")
+    )
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/2a646e65-3efb-4e20-8205-2e84f7895314"
       (reference "SW1") (unit 1) (value "SW_SPDT") (footprint "Button_Switch_THT:SW_Slide_1P2T_CK_OS102011MS2Q")
     )
@@ -388,6 +418,9 @@
     )
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/0009429a-ac72-4ed3-bb92-b860e10838a1"
       (reference "U4") (unit 1) (value "USBLC6-2SC6") (footprint "Package_TO_SOT_SMD:SOT-23-6")
+    )
+    (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/9c28a22d-e7c2-42b0-a85b-365c2ae7b76f"
+      (reference "U5") (unit 1) (value "MMC5603NJ") (footprint "Package_BGA:WLP-4_0.83x0.83mm_P0.4mm")
     )
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/3b5099b2-2cdf-44df-9ac9-85364c6a641f"
       (reference "Y1") (unit 1) (value "16MHz") (footprint "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm")

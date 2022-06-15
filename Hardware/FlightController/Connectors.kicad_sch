@@ -929,7 +929,7 @@
     (uuid 59cc7dc1-9809-43e9-90c1-24032affa563)
     (property "Reference" "J2" (id 0) (at 101.6 134.62 0))
     (property "Value" "USB_B_Mini" (id 1) (at 101.6 137.16 0))
-    (property "Footprint" "Connector_USB:USB_Mini-B_Lumberg_2486_01_Horizontal" (id 2) (at 105.41 148.59 0)
+    (property "Footprint" "digikey-footprints:USB_Mini_B_Female_UX60-MB-5ST" (id 2) (at 105.41 148.59 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (id 3) (at 105.41 148.59 0)

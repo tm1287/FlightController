@@ -146,7 +146,7 @@
     (path "/beafb0fa-bc5a-45f7-a671-ae1fea1f5da0/5b0d7121-1311-4fef-b799-fe3dae5fd866"
       (reference "#PWR027") (unit 1) (value "GND") (footprint "")
     )
-    (path "/475d3902-1f1d-456e-bff8-7fcf4e582a90/2923a183-5f62-48f4-a04c-85dbac2c918c"
+    (path "/475d3902-1f1d-456e-bff8-7fcf4e582a90/21af5faf-5839-4ed3-9239-9644cc9dd376"
       (reference "#PWR028") (unit 1) (value "GND") (footprint "")
     )
     (path "/475d3902-1f1d-456e-bff8-7fcf4e582a90/b59d50df-f03f-4cb0-94f6-1492a91cfbc7"
@@ -311,8 +311,8 @@
     (path "/4354cbd2-e9c4-4e30-9827-d99ebbfc8118/70c63837-478a-40af-b689-c4f56543a138"
       (reference "J1") (unit 1) (value "Conn_01x03") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical")
     )
-    (path "/475d3902-1f1d-456e-bff8-7fcf4e582a90/59cc7dc1-9809-43e9-90c1-24032affa563"
-      (reference "J2") (unit 1) (value "USB_B_Mini") (footprint "digikey-footprints:USB_Mini_B_Female_UX60-MB-5ST")
+    (path "/475d3902-1f1d-456e-bff8-7fcf4e582a90/209b2cfe-70f1-4ae5-9c21-7fc311c36637"
+      (reference "J2") (unit 1) (value "690-005-299-043") (footprint "digikey-footprints:USB_Mini_B_Female_690-005-299-043")
     )
     (path "/475d3902-1f1d-456e-bff8-7fcf4e582a90/aad52c50-95a6-418f-acdd-b12958d1b491"
       (reference "J3") (unit 1) (value "Conn_02x03_Odd_Even") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical")

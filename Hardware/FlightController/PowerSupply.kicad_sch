@@ -597,7 +597,6 @@
     )
   )
 
-
   (junction (at 180.34 80.01) (diameter 0) (color 0 0 0 0)
     (uuid 3bb97b28-fba3-4e0a-bf09-d5e32eea119d)
   )
@@ -1262,7 +1261,7 @@
     (property "Datasheet" "~" (id 3) (at 83.82 83.82 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "LCSC" "C9446" (id 4) (at 83.82 83.82 0)
+    (property "LCSC" "C96446" (id 4) (at 83.82 83.82 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "1" (uuid 74fe6f90-774e-420d-940e-72bbb9862368))

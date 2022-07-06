@@ -212,7 +212,7 @@ void OTG_FS_IRQHandler(void)
   /* USER CODE BEGIN OTG_FS_IRQn 1 */
 
   /* USER CODE END OTG_FS_IRQn 1 */
-	}
+}
 
 /* USER CODE BEGIN 1 */
 

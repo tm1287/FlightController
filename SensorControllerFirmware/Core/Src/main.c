@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,7 +40,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 
 SPI_HandleTypeDef hspi1;
@@ -121,18 +121,49 @@ int main(void)
 
   uint8_t logBuf[32];
   uint8_t bufLen;
+  uint8_t pwrMgmtData = 0;
+  uint8_t smplRateData = 0x07;
+  uint8_t configData = 0x00;
 
+  uint8_t accelData[6];
+  uint8_t gyroData[6];
+
+  int16_t Accel_X_RAW = 0;
+  int16_t Accel_Y_RAW = 0;
+  int16_t Accel_Z_RAW = 0;
+
+  int16_t Gyro_X_RAW = 0;
+  int16_t Gyro_Y_RAW = 0;
+  int16_t Gyro_Z_RAW = 0;
+
+  float Ax, Ay, Az, Gx, Gy, Gz;
+  imuStatus = HAL_I2C_Mem_Read(&hi2c1, (0x68 << 1), 0x75, I2C_MEMADD_SIZE_8BIT, &regData, 1, 100);
+
+  HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x6B, I2C_MEMADD_SIZE_8BIT, &pwrMgmtData, 1, 1000);
+  HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x19, I2C_MEMADD_SIZE_8BIT, &smplRateData, 1, 1000);
+
+  HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1C, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
+  HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1B, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  imuStatus = HAL_I2C_Mem_Read(&hi2c1, (0x68 << 1), 0x75, I2C_MEMADD_SIZE_8BIT, &regData, 1, 100);
 
-	  bufLen = snprintf(logBuf, 32, "Data = %u\r\n", regData);
+	  HAL_I2C_Mem_Read (&hi2c1, (0x68 << 1), 0x3B, 1, accelData, 6, 1000);
+
+	  Accel_X_RAW = (int16_t)(accelData[0] << 8 | accelData [1]);
+	  Accel_Y_RAW = (int16_t)(accelData[2] << 8 | accelData [3]);
+	  Accel_Z_RAW = (int16_t)(accelData[4] << 8 | accelData [5]);
+
+	  Ax = Accel_X_RAW/16384.0;
+	  Ay = Accel_Y_RAW/16384.0;
+	  Az = Accel_Z_RAW/16384.0;
+
+	  bufLen = snprintf(logBuf, 32, "%f,%f,%f\r\n", Ax, Ay, Az);
 	  CDC_Transmit_FS((uint8_t *) logBuf, bufLen);
 
-	  HAL_Delay(500);
+	  HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
@@ -198,7 +229,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.ClockSpeed = 400000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;

@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,6 +53,8 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+#define RAD_TO_DEG	57.2957795131f
+#define G_MS2	9.8100000000f
 
 /* USER CODE END PV */
 
@@ -144,6 +147,9 @@ int main(void)
 
   HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1C, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
   HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1B, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
+
+  float phiHat_deg = 0.0f;
+  float thetaHat_deg = 0.0f;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -156,14 +162,18 @@ int main(void)
 	  Accel_Y_RAW = (int16_t)(accelData[2] << 8 | accelData [3]);
 	  Accel_Z_RAW = (int16_t)(accelData[4] << 8 | accelData [5]);
 
-	  Ax = Accel_X_RAW/16384.0;
-	  Ay = Accel_Y_RAW/16384.0;
-	  Az = Accel_Z_RAW/16384.0;
+	  //Get approximate acceleration in m/s^2
+	  Ax = Accel_X_RAW/16384.0 * G_MS2;
+	  Ay = Accel_Y_RAW/16384.0 * G_MS2;
+	  Az = Accel_Z_RAW/16384.0 * G_MS2;
 
-	  bufLen = snprintf(logBuf, 32, "%f,%f,%f\r\n", Ax, Ay, Az);
+	  phiHat_deg = atanf(Ay / Az) * RAD_TO_DEG;
+	  thetaHat_deg = asinf(Ax / G_MS2) * RAD_TO_DEG;
+
+	  bufLen = snprintf(logBuf, 32, "%.3f,%.3f\r\n", phiHat_deg, thetaHat_deg);
 	  CDC_Transmit_FS((uint8_t *) logBuf, bufLen);
 
-	  HAL_Delay(100);
+	  HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }

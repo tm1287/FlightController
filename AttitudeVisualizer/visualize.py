@@ -10,7 +10,6 @@ ser = serial.Serial("COM3", 115200, timeout=100)
 ###
 
 WINDOW_SIZE =  800
-ROTATE_SPEED = 0.02
 window = pygame.display.set_mode( (WINDOW_SIZE, WINDOW_SIZE) )
 clock = pygame.time.Clock()
 
@@ -75,7 +74,7 @@ while True:
 
     points = [0 for _ in range(len(cube_points))]
     i = 0
-    for point in cube_points:
+    for idx, point in enumerate(cube_points):
         rotate_x = multiply_m(rotation_x, point)
         rotate_y = multiply_m(rotation_y, rotate_x)
         rotate_z = multiply_m(rotation_z, rotate_y)
@@ -86,19 +85,15 @@ while True:
 
         points[i] = (x,y)
         i += 1
-        pygame.draw.circle(window, (255, 0, 0), (x, y), 5)
+        if(idx <= 1):
+            pygame.draw.circle(window, (255, 0, 0), (x, y), 5)
+        elif (idx <= 4):
+            pygame.draw.circle(window, (0, 255, 0), (x, y), 5)
+        else:
+            pygame.draw.circle(window, (0, 0, 255), (x, y), 5)
 
-    connect_points(0, 1, points)
-    connect_points(0, 3, points)
-    connect_points(0, 4, points)
-    connect_points(1, 2, points)
-    connect_points(1, 5, points)
-    connect_points(2, 6, points)
-    connect_points(2, 3, points)
     connect_points(3, 7, points)
-    connect_points(4, 5, points)
     connect_points(4, 7, points)
-    connect_points(6, 5, points)
     connect_points(6, 7, points)
 
     for event in pygame.event.get():

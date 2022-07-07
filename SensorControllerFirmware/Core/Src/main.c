@@ -24,6 +24,8 @@
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include <math.h>
+#include "MPU6050.h"
+#include "constants.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,10 +55,7 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-#define RAD_TO_DEG	57.2957795131f
-#define G_MS2	9.8100000000f
-#define CF_ALPHA 0.0250000000f
-
+MPU6050 imu;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -75,71 +74,6 @@ static void MX_SPI1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t whoamiData;
-HAL_StatusTypeDef imuStatus;
-
-uint8_t pwrMgmtData = 0;
-uint8_t smplRateData = 0x07;
-uint8_t configData = 0x00;
-
-
-int16_t Accel_X_RAW = 0;
-int16_t Accel_Y_RAW = 0;
-int16_t Accel_Z_RAW = 0;
-
-int16_t Gyro_X_RAW = 0;
-int16_t Gyro_Y_RAW = 0;
-int16_t Gyro_Z_RAW = 0;
-
-float Ax, Ay, Az, p, q, r;
-
-void init_IMU(void) {
-	imuStatus = HAL_I2C_Mem_Read(&hi2c1, (0x68 << 1), 0x75, I2C_MEMADD_SIZE_8BIT, &whoamiData, 1, 100);
-	if(whoamiData == 0x68) {
-		//Wake up the sensor
-		HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x6B, I2C_MEMADD_SIZE_8BIT, &pwrMgmtData, 1, 1000);
-
-		//Set Gyro sample rate to 1KHz
-		HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x19, I2C_MEMADD_SIZE_8BIT, &smplRateData, 1, 1000);
-
-		//Set accel config to +/- 2g and gyro to +/- 250 dps
-		HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1C, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
-		HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1B, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
-	}
-}
-
-void readAccel(void) {
-	uint8_t accelData[6];
-
-	HAL_I2C_Mem_Read (&hi2c1, (0x68 << 1), 0x3B, 1, accelData, 6, 1000);
-
-	Accel_X_RAW = (int16_t)(accelData[0] << 8 | accelData [1]);
-	Accel_Y_RAW = (int16_t)(accelData[2] << 8 | accelData [3]);
-	Accel_Z_RAW = (int16_t)(accelData[4] << 8 | accelData [5]);
-
-	//Get approximate acceleration in m/s^2
-	Ax = Accel_X_RAW/16384.0 * G_MS2;
-	Ay = Accel_Y_RAW/16384.0 * G_MS2;
-	Az = Accel_Z_RAW/16384.0 * G_MS2;
-}
-
-void readGyro(void) {
-	uint8_t gyroData[6];
-
-	// Read 6 BYTES of data starting from GYRO_XOUT_H register
-
-	HAL_I2C_Mem_Read (&hi2c1, (0x68 << 1), 0x43, 1, gyroData, 6, 1000);
-
-	Gyro_X_RAW = (int16_t)(gyroData[0] << 8 | gyroData [1]);
-	Gyro_Y_RAW = (int16_t)(gyroData[2] << 8 | gyroData [3]);
-	Gyro_Z_RAW = (int16_t)(gyroData[4] << 8 | gyroData [5]);
-
-	//Convert to rads per second
-	p = Gyro_X_RAW/131.0 * M_PI / 180;
-	q = -1 * Gyro_Y_RAW/131.0 * M_PI / 180;
-	r = -1 * Gyro_Z_RAW/131.0 * M_PI / 180;
-
-}
 
 /* USER CODE END 0 */
 
@@ -181,46 +115,47 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  MPU6050_Initialize(&imu, &hi2c1);
 
   uint8_t logBuf[32];
   uint8_t bufLen;
 
-  float phiHat_acc_rad = 0.0f;
-  float thetaHat_acc_rad = 0.0f;
-  float phiDot_rps = 0.0f;
-  float thetaDot_rps = 0.0f;
-  float phiHat_rad = 0.0f;
-  float thetaHat_rad = 0.0f;
-  init_IMU();
+  double phiHat_acc_rad = 0.0f;
+  double thetaHat_acc_rad = 0.0f;
+  double phiDot_rps = 0.0f;
+  double thetaDot_rps = 0.0f;
+  double phiHat_rad = 0.0f;
+  double thetaHat_rad = 0.0f;
 
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	readAccel();
-	readGyro();
+	MPU6050_ReadAccel(&imu);
+	MPU6050_ReadGyro(&imu);
 
-	phiHat_acc_rad = atanf(Ay / Az);
-	thetaHat_acc_rad = asinf(Ax / G_MS2);
+	phiHat_acc_rad = atanf(imu.acc_mps2[1] / imu.acc_mps2[2]);
+	thetaHat_acc_rad = asinf(imu.acc_mps2[0] / G_MS2);
 
 
-	phiDot_rps = p + (tanf(thetaHat_rad) * sinf(phiHat_rad) * q) + (tanf(thetaHat_rad) * cosf(phiHat_rad) * r);
-	thetaDot_rps = cosf(phiHat_rad) * q - sinf(phiHat_rad) * r;
+	phiDot_rps = imu.gyr_rps[0] + (tanf(thetaHat_rad) * sinf(phiHat_rad) * imu.gyr_rps[1]) + (tanf(thetaHat_rad) * cosf(phiHat_rad) * imu.gyr_rps[2]);
+	thetaDot_rps = cosf(phiHat_rad) * imu.gyr_rps[1] - sinf(phiHat_rad) * imu.gyr_rps[2];
 
-	phiHat_rad = CF_ALPHA * phiHat_acc_rad + (1.0f - CF_ALPHA) * (phiHat_rad + (50 / 1000.0f) * phiDot_rps);
-	thetaHat_rad = CF_ALPHA * thetaHat_acc_rad + (1.0f - CF_ALPHA) * (thetaHat_rad + (50 / 1000.0f) * thetaDot_rps);
+	phiHat_rad = CF_ALPHA * phiHat_acc_rad + (1.0f - CF_ALPHA) * (phiHat_rad + (20 / 1000.0f) * phiDot_rps);
+	thetaHat_rad = CF_ALPHA * thetaHat_acc_rad + (1.0f - CF_ALPHA) * (thetaHat_rad + (20 / 1000.0f) * thetaDot_rps);
 
 	bufLen = snprintf(logBuf, 32, "%.3f,%.3f\r\n", phiHat_rad * RAD_TO_DEG, thetaHat_rad * RAD_TO_DEG);
 	//bufLen = snprintf(logBuf, 32, "%.3f,%.3f,%.3f\r\n", p, q, r);
 
 	CDC_Transmit_FS((uint8_t *) logBuf, bufLen);
 
-	HAL_Delay(50);
+	HAL_Delay(20);
   }
   /* USER CODE END 3 */
 }

@@ -74,6 +74,71 @@ static void MX_SPI1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+uint8_t whoamiData;
+HAL_StatusTypeDef imuStatus;
+
+uint8_t pwrMgmtData = 0;
+uint8_t smplRateData = 0x07;
+uint8_t configData = 0x00;
+
+
+int16_t Accel_X_RAW = 0;
+int16_t Accel_Y_RAW = 0;
+int16_t Accel_Z_RAW = 0;
+
+int16_t Gyro_X_RAW = 0;
+int16_t Gyro_Y_RAW = 0;
+int16_t Gyro_Z_RAW = 0;
+
+float Ax, Ay, Az, Gx, Gy, Gz;
+
+void init_IMU(void) {
+	imuStatus = HAL_I2C_Mem_Read(&hi2c1, (0x68 << 1), 0x75, I2C_MEMADD_SIZE_8BIT, &whoamiData, 1, 100);
+	if(whoamiData == 0x68) {
+		//Wake up the sensor
+		HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x6B, I2C_MEMADD_SIZE_8BIT, &pwrMgmtData, 1, 1000);
+
+		//Set Gyro sample rate to 1KHz
+		HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x19, I2C_MEMADD_SIZE_8BIT, &smplRateData, 1, 1000);
+
+		//Set accel config to +/- 2g and gyro to +/- 250 dps
+		HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1C, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
+		HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1B, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
+	}
+}
+
+void readAccel(void) {
+	uint8_t accelData[6];
+
+	HAL_I2C_Mem_Read (&hi2c1, (0x68 << 1), 0x3B, 1, accelData, 6, 1000);
+
+	Accel_X_RAW = (int16_t)(accelData[0] << 8 | accelData [1]);
+	Accel_Y_RAW = (int16_t)(accelData[2] << 8 | accelData [3]);
+	Accel_Z_RAW = (int16_t)(accelData[4] << 8 | accelData [5]);
+
+	//Get approximate acceleration in m/s^2
+	Ax = Accel_X_RAW/16384.0 * G_MS2;
+	Ay = Accel_Y_RAW/16384.0 * G_MS2;
+	Az = Accel_Z_RAW/16384.0 * G_MS2;
+}
+
+void readGyro(void) {
+	uint8_t gyroData[6];
+
+	// Read 6 BYTES of data starting from GYRO_XOUT_H register
+
+	HAL_I2C_Mem_Read (&hi2c1, (0x68 << 1), 0x43, 1, gyroData, 6, 1000);
+
+	Gyro_X_RAW = (int16_t)(gyroData[0] << 8 | gyroData [1]);
+	Gyro_Y_RAW = (int16_t)(gyroData[2] << 8 | gyroData [3]);
+	Gyro_Z_RAW = (int16_t)(gyroData[4] << 8 | gyroData [5]);
+
+	//Convert to degrees per second
+	Gx = Gyro_X_RAW/131.0;
+	Gy = Gyro_Y_RAW/131.0;
+	Gz = Gyro_Z_RAW/131.0;
+
+}
 
 /* USER CODE END 0 */
 
@@ -119,61 +184,30 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint8_t regData;
-  HAL_StatusTypeDef imuStatus;
 
   uint8_t logBuf[32];
   uint8_t bufLen;
-  uint8_t pwrMgmtData = 0;
-  uint8_t smplRateData = 0x07;
-  uint8_t configData = 0x00;
-
-  uint8_t accelData[6];
-  uint8_t gyroData[6];
-
-  int16_t Accel_X_RAW = 0;
-  int16_t Accel_Y_RAW = 0;
-  int16_t Accel_Z_RAW = 0;
-
-  int16_t Gyro_X_RAW = 0;
-  int16_t Gyro_Y_RAW = 0;
-  int16_t Gyro_Z_RAW = 0;
-
-  float Ax, Ay, Az, Gx, Gy, Gz;
-  imuStatus = HAL_I2C_Mem_Read(&hi2c1, (0x68 << 1), 0x75, I2C_MEMADD_SIZE_8BIT, &regData, 1, 100);
-
-  HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x6B, I2C_MEMADD_SIZE_8BIT, &pwrMgmtData, 1, 1000);
-  HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x19, I2C_MEMADD_SIZE_8BIT, &smplRateData, 1, 1000);
-
-  HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1C, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
-  HAL_I2C_Mem_Write(&hi2c1, (0x68 << 1), 0x1B, I2C_MEMADD_SIZE_8BIT, &configData, 1, 1000);
 
   float phiHat_deg = 0.0f;
   float thetaHat_deg = 0.0f;
+
+  init_IMU();
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	readAccel();
+	readGyro();
 
-	  HAL_I2C_Mem_Read (&hi2c1, (0x68 << 1), 0x3B, 1, accelData, 6, 1000);
+	phiHat_deg = atanf(Ay / Az) * RAD_TO_DEG;
+	thetaHat_deg = asinf(Ax / G_MS2) * RAD_TO_DEG;
 
-	  Accel_X_RAW = (int16_t)(accelData[0] << 8 | accelData [1]);
-	  Accel_Y_RAW = (int16_t)(accelData[2] << 8 | accelData [3]);
-	  Accel_Z_RAW = (int16_t)(accelData[4] << 8 | accelData [5]);
+	bufLen = snprintf(logBuf, 32, "%.3f,%.3f\r\n", phiHat_deg, thetaHat_deg);
+	CDC_Transmit_FS((uint8_t *) logBuf, bufLen);
 
-	  //Get approximate acceleration in m/s^2
-	  Ax = Accel_X_RAW/16384.0 * G_MS2;
-	  Ay = Accel_Y_RAW/16384.0 * G_MS2;
-	  Az = Accel_Z_RAW/16384.0 * G_MS2;
-
-	  phiHat_deg = atanf(Ay / Az) * RAD_TO_DEG;
-	  thetaHat_deg = asinf(Ax / G_MS2) * RAD_TO_DEG;
-
-	  bufLen = snprintf(logBuf, 32, "%.3f,%.3f\r\n", phiHat_deg, thetaHat_deg);
-	  CDC_Transmit_FS((uint8_t *) logBuf, bufLen);
-
-	  HAL_Delay(10);
+	HAL_Delay(50);
   }
   /* USER CODE END 3 */
 }

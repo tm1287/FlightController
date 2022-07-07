@@ -55,6 +55,7 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 #define RAD_TO_DEG	57.2957795131f
 #define G_MS2	9.8100000000f
+#define CF_ALPHA 0.0250000000f
 
 /* USER CODE END PV */
 
@@ -90,7 +91,7 @@ int16_t Gyro_X_RAW = 0;
 int16_t Gyro_Y_RAW = 0;
 int16_t Gyro_Z_RAW = 0;
 
-float Ax, Ay, Az, Gx, Gy, Gz;
+float Ax, Ay, Az, p, q, r;
 
 void init_IMU(void) {
 	imuStatus = HAL_I2C_Mem_Read(&hi2c1, (0x68 << 1), 0x75, I2C_MEMADD_SIZE_8BIT, &whoamiData, 1, 100);
@@ -133,10 +134,10 @@ void readGyro(void) {
 	Gyro_Y_RAW = (int16_t)(gyroData[2] << 8 | gyroData [3]);
 	Gyro_Z_RAW = (int16_t)(gyroData[4] << 8 | gyroData [5]);
 
-	//Convert to degrees per second
-	Gx = Gyro_X_RAW/131.0;
-	Gy = Gyro_Y_RAW/131.0;
-	Gz = Gyro_Z_RAW/131.0;
+	//Convert to rads per second
+	p = Gyro_X_RAW/131.0 * M_PI / 180;
+	q = -1 * Gyro_Y_RAW/131.0 * M_PI / 180;
+	r = -1 * Gyro_Z_RAW/131.0 * M_PI / 180;
 
 }
 
@@ -188,9 +189,12 @@ int main(void)
   uint8_t logBuf[32];
   uint8_t bufLen;
 
-  float phiHat_deg = 0.0f;
-  float thetaHat_deg = 0.0f;
-
+  float phiHat_acc_rad = 0.0f;
+  float thetaHat_acc_rad = 0.0f;
+  float phiDot_rps = 0.0f;
+  float thetaDot_rps = 0.0f;
+  float phiHat_rad = 0.0f;
+  float thetaHat_rad = 0.0f;
   init_IMU();
 
   while (1)
@@ -201,10 +205,19 @@ int main(void)
 	readAccel();
 	readGyro();
 
-	phiHat_deg = atanf(Ay / Az) * RAD_TO_DEG;
-	thetaHat_deg = asinf(Ax / G_MS2) * RAD_TO_DEG;
+	phiHat_acc_rad = atanf(Ay / Az);
+	thetaHat_acc_rad = asinf(Ax / G_MS2);
 
-	bufLen = snprintf(logBuf, 32, "%.3f,%.3f\r\n", phiHat_deg, thetaHat_deg);
+
+	phiDot_rps = p + (tanf(thetaHat_rad) * sinf(phiHat_rad) * q) + (tanf(thetaHat_rad) * cosf(phiHat_rad) * r);
+	thetaDot_rps = cosf(phiHat_rad) * q - sinf(phiHat_rad) * r;
+
+	phiHat_rad = CF_ALPHA * phiHat_acc_rad + (1.0f - CF_ALPHA) * (phiHat_rad + (50 / 1000.0f) * phiDot_rps);
+	thetaHat_rad = CF_ALPHA * thetaHat_acc_rad + (1.0f - CF_ALPHA) * (thetaHat_rad + (50 / 1000.0f) * thetaDot_rps);
+
+	bufLen = snprintf(logBuf, 32, "%.3f,%.3f\r\n", phiHat_rad * RAD_TO_DEG, thetaHat_rad * RAD_TO_DEG);
+	//bufLen = snprintf(logBuf, 32, "%.3f,%.3f,%.3f\r\n", p, q, r);
+
 	CDC_Transmit_FS((uint8_t *) logBuf, bufLen);
 
 	HAL_Delay(50);

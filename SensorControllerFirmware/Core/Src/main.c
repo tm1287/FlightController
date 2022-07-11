@@ -25,6 +25,7 @@
 #include "usbd_cdc_if.h"
 #include <math.h>
 #include "MPU6050.h"
+#include "EEPROM.h"
 #include "constants.h"
 /* USER CODE END Includes */
 
@@ -56,6 +57,7 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 MPU6050 imu;
+EEPROM eeprom;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -121,7 +123,22 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   MPU6050_Initialize(&imu, &hi2c1);
+  EEPROM_Initialize(&eeprom, &hspi1);
+  //EEPROM_ReadId(&eeprom, &j_id);
+  /*
+  HAL_GPIO_WritePin(CS_PORT, CS_PIN, GPIO_PIN_RESET);
+  uint8_t id_reg = 0x90;
+  uint8_t ret;
+  uint32_t Temp = 0, Temp0 = 0, Temp1 = 0, Temp2 = 0;
+  HAL_SPI_TransmitReceive(&hspi1, &id_reg, &ret, 1, 100);
+  uint32_t dummy_data = 0xA5;
+  HAL_SPI_TransmitReceive(&hspi1, &dummy_data, &Temp0, 1, 100);
+  HAL_SPI_TransmitReceive(&hspi1, &dummy_data, &Temp1, 1, 100);
+  HAL_SPI_TransmitReceive(&hspi1, &dummy_data, &Temp2, 1, 100);
+  HAL_GPIO_WritePin(CS_PORT, CS_PIN, GPIO_PIN_SET);
 
+  Temp = (Temp0 << 16) | (Temp1 << 8) | Temp2;
+  */
   uint8_t logBuf[32];
   uint8_t bufLen;
 
@@ -137,6 +154,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
 	MPU6050_ReadAccel(&imu);
 	MPU6050_ReadGyro(&imu);
 
@@ -154,6 +172,7 @@ int main(void)
 	//bufLen = snprintf(logBuf, 32, "%.3f,%.3f,%.3f\r\n", p, q, r);
 
 	CDC_Transmit_FS((uint8_t *) logBuf, bufLen);
+
 
 	HAL_Delay(20);
   }
@@ -296,7 +315,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -543,7 +562,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(EEPROM_CS_GPIO_Port, EEPROM_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(EEPROM_CS_GPIO_Port, EEPROM_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : EEPROM_CS_Pin */
   GPIO_InitStruct.Pin = EEPROM_CS_Pin;

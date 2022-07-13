@@ -24,9 +24,10 @@
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include <math.h>
-#include "MPU6050.h"
 #include "EEPROM.h"
 #include "constants.h"
+#include "I2Cdev.h"
+#include "MPU6050.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,7 +57,6 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-MPU6050 imu;
 EEPROM eeprom;
 /* USER CODE END PV */
 
@@ -122,8 +122,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  MPU6050_Initialize(&imu, &hi2c1);
-  EEPROM_Initialize(&eeprom, &hspi1);
+  I2Cdev_init(&hi2c1);
+  MPU6050_initialize();
   //EEPROM_ReadId(&eeprom, &j_id);
   /*
   HAL_GPIO_WritePin(CS_PORT, CS_PIN, GPIO_PIN_RESET);
@@ -142,39 +142,13 @@ int main(void)
   uint8_t logBuf[32];
   uint8_t bufLen;
 
-  double phiHat_acc_rad = 0.0f;
-  double thetaHat_acc_rad = 0.0f;
-  double phiDot_rps = 0.0f;
-  double thetaDot_rps = 0.0f;
-  double phiHat_rad = 0.0f;
-  double thetaHat_rad = 0.0f;
-
+  uint8_t devStatus = 0;
+  devStatus = MPU6050_testConnection();
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-	MPU6050_ReadAccel(&imu);
-	MPU6050_ReadGyro(&imu);
-
-	phiHat_acc_rad = atanf(imu.acc_mps2[1] / imu.acc_mps2[2]);
-	thetaHat_acc_rad = asinf(imu.acc_mps2[0] / G_MS2);
-
-
-	phiDot_rps = imu.gyr_rps[0] + (tanf(thetaHat_rad) * sinf(phiHat_rad) * imu.gyr_rps[1]) + (tanf(thetaHat_rad) * cosf(phiHat_rad) * imu.gyr_rps[2]);
-	thetaDot_rps = cosf(phiHat_rad) * imu.gyr_rps[1] - sinf(phiHat_rad) * imu.gyr_rps[2];
-
-	phiHat_rad = CF_ALPHA * phiHat_acc_rad + (1.0f - CF_ALPHA) * (phiHat_rad + (20 / 1000.0f) * phiDot_rps);
-	thetaHat_rad = CF_ALPHA * thetaHat_acc_rad + (1.0f - CF_ALPHA) * (thetaHat_rad + (20 / 1000.0f) * thetaDot_rps);
-
-	bufLen = snprintf(logBuf, 32, "%.3f,%.3f\r\n", phiHat_rad * RAD_TO_DEG, thetaHat_rad * RAD_TO_DEG);
-	//bufLen = snprintf(logBuf, 32, "%.3f,%.3f,%.3f\r\n", p, q, r);
-
-	CDC_Transmit_FS((uint8_t *) logBuf, bufLen);
-
-
-	HAL_Delay(20);
   }
   /* USER CODE END 3 */
 }

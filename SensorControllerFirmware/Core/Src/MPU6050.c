@@ -39,7 +39,7 @@ THE SOFTWARE.
 
 static uint8_t devAddr;
 static uint8_t buffer[14];
-static uint32_t fifoTimeout;
+
 
 /** Valid addresses
  *  MPU6050_ADDRESS_AD0_LOW
@@ -2690,56 +2690,6 @@ void MPU6050_getFIFOBytes(uint8_t *data, uint8_t length) {
  */
 void MPU6050_setFIFOByte(uint8_t data) {
     I2Cdev_writeByte(devAddr, MPU6050_RA_FIFO_R_W, data);
-}
-
-/** Get timeout to get a packet from FIFO buffer.
- * @return Current timeout to get a packet from FIFO buffer
- * @see MPU6050_FIFO_DEFAULT_TIMEOUT
- */
-uint32_t MPU6050_getFIFOTimeout() {
-	return fifoTimeout;
-}
-
-/** Set timeout to get a packet from FIFO buffer.
- * @param New timeout to get a packet from FIFO buffer
- * @see MPU6050_FIFO_DEFAULT_TIMEOUT
- */
-void MPU6050_setFIFOTimeout(uint32_t nfifoTimeout) {
-	fifoTimeout = nfifoTimeout;
-}
-
-int8_t MPU6050_getCurrentFIFOPacket(uint8_t *data, uint8_t length) { // overflow proof
-    int16_t fifoC;
-    // This section of code is for when we allowed more than 1 packet to be acquired
-    uint32_t BreakTimer = HAL_GetTick();
-    bool packetReceived = false;
-    do {
-        if ((fifoC = getFIFOCount())  > length) {
-
-            if (fifoC > 200) { // if you waited to get the FIFO buffer to > 200 bytes it will take longer to get the last packet in the FIFO Buffer than it will take to  reset the buffer and wait for the next to arrive
-                resetFIFO(); // Fixes any overflow corruption
-                fifoC = 0;
-                while (!(fifoC = getFIFOCount()) && ((HAL_GetTick() - BreakTimer) <= (getFIFOTimeout()))); // Get Next New Packet
-                } else { //We have more than 1 packet but less than 200 bytes of data in the FIFO Buffer
-                uint8_t Trash[I2CDEVLIB_WIRE_BUFFER_LENGTH];
-                while ((fifoC = getFIFOCount()) > length) {  // Test each time just in case the MPU is writing to the FIFO Buffer
-                    fifoC = fifoC - length; // Save the last packet
-                    uint16_t  RemoveBytes;
-                    while (fifoC) { // fifo count will reach zero so this is safe
-                        RemoveBytes = (fifoC < I2CDEVLIB_WIRE_BUFFER_LENGTH) ? fifoC : I2CDEVLIB_WIRE_BUFFER_LENGTH; // Buffer Length is different than the packet length this will efficiently clear the buffer
-                        getFIFOBytes(Trash, (uint8_t)RemoveBytes);
-                        fifoC -= RemoveBytes;
-                    }
-                }
-            }
-        }
-        if (!fifoC) return 0; // Called too early no data or we timed out after FIFO Reset
-        // We have 1 packet
-        packetReceived = fifoC == length;
-        if (!packetReceived && (HAL_GetTick() - BreakTimer) > (getFIFOTimeout())) return 0;
-    } while (!packetReceived);
-    getFIFOBytes(data, length); //Get 1 packet
-    return 1;
 }
 
 // WHO_AM_I register
